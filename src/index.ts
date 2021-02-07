@@ -1,7 +1,21 @@
-const sayHello = (name: string, age: number, gender: string): string => {
-  return `Hello, ${name}, you are ${age} years, you are a ${gender}`;
+import { StringDecoder } from "string_decoder";
+
+interface Human {
+  name: string;
+  age: number;
+  gender: string;
+}
+
+const person = {
+  name: "Seol",
+  age: 22,
+  gender: "male",
 };
 
-console.log(sayHello("Seol", 44, "male"));
+const sayHello = (person: Human): string => {
+  return `Hello, ${person.name}, you are ${person.age} years, you are a ${person.gender}`;
+};
+
+console.log(sayHello(person));
 
 export {};
