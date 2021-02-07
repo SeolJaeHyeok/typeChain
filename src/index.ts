@@ -1,4 +1,4 @@
-import { time } from "console";
+import * as CryptoJS from "crypto-js"; // TS import 하는 법
 
 class Block {
   public index: number;
@@ -6,6 +6,14 @@ class Block {
   public previousHash: string;
   public data: string;
   public timestamp: number;
+
+  static calculateBlockHash = (
+    index: number,
+    previousHash: string,
+    timestamp: number,
+    data: string
+  ): string =>
+    CryptoJS.SHA256(index + previousHash + timestamp + data).toString();
 
   constructor(
     index: number,
@@ -24,8 +32,12 @@ class Block {
 
 const genesisBlock: Block = new Block(0, "2564", "", "Hello", 1234);
 
-const blockchain: [Block] = [genesisBlock];
+const blockchain: Block[] = [genesisBlock];
 
-console.log(blockchain);
+const getBlockchain = (): Block[] => blockchain;
+
+const getLatestBlock = (): Block => blockchain[blockchain.length - 1];
+
+const getNewTimestamp = (): number => Math.round(new Date().getTime() / 1000);
 
 export {};
