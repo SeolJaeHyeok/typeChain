@@ -1,4 +1,5 @@
 import * as CryptoJS from "crypto-js"; // TS import 하는 법
+import { isRegExp } from "util";
 
 class Block {
   static calculateBlockHash = (
@@ -66,17 +67,39 @@ const createNewBlock = (data: string): Block => {
     newTimeStamp
   );
 
+  addBlock(newBlock);
+
   return newBlock;
 };
 
+const getHashForBlock = (aBlock: Block): string =>
+  Block.calculateBlockHash(
+    aBlock.index,
+    aBlock.previousHash,
+    aBlock.timestamp,
+    aBlock.data
+  );
+
 const isBlockValid = (candidateBlock: Block, previousBlock: Block): boolean => {
-  if (!Block.validateStructure(candidateBlock)) {
+  if (!Block.validateStructure(candidateBlock)) return false;
+  else if (previousBlock.index + 1 !== candidateBlock.index) return false;
+  else if (previousBlock.hash !== candidateBlock.previousHash) return false;
+  else if (getHashForBlock(candidateBlock) !== candidateBlock.hash)
     return false;
-  } else if (previousBlock.index + 1 !== candidateBlock.index) {
-    return false;
-  } else if (previousBlock.hash !== candidateBlock.previousHash) {
-    return false;
+  else return true;
+};
+
+const addBlock = (candidateBlock: Block): void => {
+  if (isBlockValid(candidateBlock, getLatestBlock())) {
+    blockchain.push(candidateBlock);
   }
 };
+
+createNewBlock("second Block");
+createNewBlock("third Block");
+createNewBlock("fourth Block");
+createNewBlock("fifth Block");
+
+console.log(blockchain);
 
 export {};
